@@ -14,8 +14,12 @@ CCamera objCamera;
 
 GLfloat g_lookupdown = 0.0f;
 
-GLfloat Position[] = { 0.0f, 3.0f, 0.0f, 1.0f };			// Light Position
-GLfloat Position2[] = { 0.0f, 0.0f, -5.0f, 1.0f };			// Light Position
+//materiales
+GLfloat SunDiffuse[] = { 0.5f, 0.5f, 0.5f, 1.0f };			// Diffuse Light Values
+GLfloat SunSpecular[] = { 0.5, 0.5, 0.5, 1.0 };				// Specular Light Values
+
+GLfloat mat1Diffuse[] = { 1.0,1.0,1.0, 0.25f };			// material 1
+GLfloat mat1Specular[] = { 0.25, 0.25, 0.25, 0.25 };
 
 //Texturas
 CTexture	t_adoquin, t_pasto, 
@@ -23,19 +27,20 @@ CTexture	t_adoquin, t_pasto,
 
 void init(void)
 {
-	glShadeModel(GL_SMOOTH);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClearDepth(1.0f);					// Activamos el valor de inicio del buffer de profundidad
+	glShadeModel(GL_SMOOTH);
 	glEnable(GL_DEPTH_TEST);				// Hacemos la prueba de profundidad
-
-	glLightfv(GL_LIGHT0, GL_POSITION, Position);
-	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, Position2);
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-
 	glDepthFunc(GL_LEQUAL);				// Tipo de prueba de profundidad a hacer
-	glEnable(GL_COLOR_MATERIAL);
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+	//glEnable(GL_COLOR_MATERIAL);
+	
+	//Para emplear luces
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT1);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, SunDiffuse);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, SunSpecular);
+		
 	objCamera.Position_Camera(0, 2.5f, 3, 0, 2.5f, 0, 0, 1, 0);
 
 //texturas
@@ -97,58 +102,61 @@ void prisma(
 		{ -0.5 ,0.5, 0.5 },    //Coordenadas Vértice 7 V7
 	};
 
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat1Diffuse);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, mat1Specular);
+
 	glBindTexture(GL_TEXTURE_2D, textura0); //textura 0
 	glBegin(GL_POLYGON);	//Front
-		glNormal3f(0.0f, 0.0f, 1.0f);
-		glTexCoord2f(1.0f, 0.0f); glVertex3fv(vertice[0]);
-		glTexCoord2f(1.0f, 1.0f); glVertex3fv(vertice[4]);
-		glTexCoord2f(0.0f, 1.0f); glVertex3fv(vertice[7]);
-		glTexCoord2f(0.0f, 0.0f); glVertex3fv(vertice[1]);
+	glNormal3f(0.0f, 0.0f, 1.0f);
+	glTexCoord2f(1.0f, 0.0f); glVertex3fv(vertice[0]);
+	glTexCoord2f(1.0f, 1.0f); glVertex3fv(vertice[4]);
+	glTexCoord2f(0.0f, 1.0f); glVertex3fv(vertice[7]);
+	glTexCoord2f(0.0f, 0.0f); glVertex3fv(vertice[1]);
 	glEnd();
-	
+
 	glBindTexture(GL_TEXTURE_2D, textura1); //textura 1
 	glBegin(GL_POLYGON);	//Right 
-		glNormal3f(1.0f, 0.0f, 0.0f);
-		glTexCoord2f(0.0f, 0.0f); glVertex3fv(vertice[0]);
-		glTexCoord2f(1.0f, 0.0f); glVertex3fv(vertice[3]);
-		glTexCoord2f(1.0f, 1.0f); glVertex3fv(vertice[5]);
-		glTexCoord2f(0.0f, 1.0f); glVertex3fv(vertice[4]);
+	glNormal3f(1.0f, 0.0f, 0.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3fv(vertice[0]);
+	glTexCoord2f(1.0f, 0.0f); glVertex3fv(vertice[3]);
+	glTexCoord2f(1.0f, 1.0f); glVertex3fv(vertice[5]);
+	glTexCoord2f(0.0f, 1.0f); glVertex3fv(vertice[4]);
 	glEnd();
 
 	glBindTexture(GL_TEXTURE_2D, textura2); //textura 2
 	glBegin(GL_POLYGON);	//Back
-		glNormal3f(0.0f, 0.0f, -1.0f);
-		glTexCoord2f(1.0f, 1.0f); glVertex3fv(vertice[6]);
-		glTexCoord2f(0.0f, 1.0f); glVertex3fv(vertice[5]);
-		glTexCoord2f(0.0f, 0.0f); glVertex3fv(vertice[3]);
-		glTexCoord2f(1.0f, 0.0f); glVertex3fv(vertice[2]);
+	glNormal3f(0.0f, 0.0f, -1.0f);
+	glTexCoord2f(1.0f, 1.0f); glVertex3fv(vertice[6]);
+	glTexCoord2f(0.0f, 1.0f); glVertex3fv(vertice[5]);
+	glTexCoord2f(0.0f, 0.0f); glVertex3fv(vertice[3]);
+	glTexCoord2f(1.0f, 0.0f); glVertex3fv(vertice[2]);
 	glEnd();
 
 	glBindTexture(GL_TEXTURE_2D, textura3); //textura 3
 	glBegin(GL_POLYGON);  //Left
-		glNormal3f(-1.0f, 0.0f, 0.0f);
-		glTexCoord2f(1.0f, 0.0f); glVertex3fv(vertice[1]);
-		glTexCoord2f(1.0f, 1.0f); glVertex3fv(vertice[7]);
-		glTexCoord2f(0.0f, 1.0f); glVertex3fv(vertice[6]);
-		glTexCoord2f(0.0f, 0.0f); glVertex3fv(vertice[2]);
+	glNormal3f(-1.0f, 0.0f, 0.0f);
+	glTexCoord2f(1.0f, 0.0f); glVertex3fv(vertice[1]);
+	glTexCoord2f(1.0f, 1.0f); glVertex3fv(vertice[7]);
+	glTexCoord2f(0.0f, 1.0f); glVertex3fv(vertice[6]);
+	glTexCoord2f(0.0f, 0.0f); glVertex3fv(vertice[2]);
 	glEnd();
 
 	glBindTexture(GL_TEXTURE_2D, textura4); //textura 4
 	glBegin(GL_POLYGON);  //Bottom
-		glNormal3f(0.0f, -1.0f, 0.0f);
-		glTexCoord2f(0.0f, 0.0f); glVertex3fv(vertice[0]);
-		glTexCoord2f(1.0f, 0.0f); glVertex3fv(vertice[1]);
-		glTexCoord2f(1.0f, 1.0f); glVertex3fv(vertice[2]);
-		glTexCoord2f(0.0f, 1.0f); glVertex3fv(vertice[3]);
+	glNormal3f(0.0f, -1.0f, 0.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3fv(vertice[0]);
+	glTexCoord2f(1.0f, 0.0f); glVertex3fv(vertice[1]);
+	glTexCoord2f(1.0f, 1.0f); glVertex3fv(vertice[2]);
+	glTexCoord2f(0.0f, 1.0f); glVertex3fv(vertice[3]);
 	glEnd();
 
 	glBindTexture(GL_TEXTURE_2D, textura5); //textura 5
 	glBegin(GL_POLYGON);  //Top
-		glNormal3f(0.0f, 1.0f, 0.0f);
-		glTexCoord2f(4.0, 0.0f); glVertex3fv(vertice[4]);
-		glTexCoord2f(4.0, 4.0f); glVertex3fv(vertice[5]);
-		glTexCoord2f(0.0, 4.0f); glVertex3fv(vertice[6]);
-		glTexCoord2f(0.0f, 0.0f); glVertex3fv(vertice[7]);
+	glNormal3f(0.0f, 1.0f, 0.0f);
+	glTexCoord2f(4.0, 0.0f); glVertex3fv(vertice[4]);
+	glTexCoord2f(4.0, 4.0f); glVertex3fv(vertice[5]);
+	glTexCoord2f(0.0, 4.0f); glVertex3fv(vertice[6]);
+	glTexCoord2f(0.0f, 0.0f); glVertex3fv(vertice[7]);
 	glEnd();
 }
 
