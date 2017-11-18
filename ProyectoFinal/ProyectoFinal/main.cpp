@@ -18,7 +18,8 @@ GLfloat Position[] = { 0.0f, 3.0f, 0.0f, 1.0f };			// Light Position
 GLfloat Position2[] = { 0.0f, 0.0f, -5.0f, 1.0f };			// Light Position
 
 //Texturas
-CTexture t_adoquin, t_pasto;
+CTexture	t_adoquin, t_pasto, 
+			t_pintura1, t_pintura2, t_pintura3, t_pintura4;
 
 void init(void)
 {
@@ -47,6 +48,22 @@ void init(void)
 	t_pasto.LoadTGA("texturas/pasto.tga");
 	t_pasto.BuildGLTexture();
 	t_pasto.ReleaseImage();
+
+	t_pintura1.LoadTGA("texturas/pintura1.tga");
+	t_pintura1.BuildGLTexture();
+	t_pintura1.ReleaseImage();
+
+	t_pintura2.LoadTGA("texturas/pintura2.tga");
+	t_pintura2.BuildGLTexture();
+	t_pintura2.ReleaseImage();
+
+	t_pintura3.LoadTGA("texturas/pintura3.tga");
+	t_pintura3.BuildGLTexture();
+	t_pintura3.ReleaseImage();
+
+	t_pintura4.LoadTGA("texturas/pintura4.tga");
+	t_pintura4.BuildGLTexture();
+	t_pintura4.ReleaseImage();
 }
 
 void reshape(int w, int h)
@@ -83,10 +100,10 @@ void prisma(
 	glBindTexture(GL_TEXTURE_2D, textura0); //textura 0
 	glBegin(GL_POLYGON);	//Front
 		glNormal3f(0.0f, 0.0f, 1.0f);
-		glTexCoord2f(0.0f, 0.0f); glVertex3fv(vertice[0]);
-		glTexCoord2f(1.0f, 0.0f); glVertex3fv(vertice[4]);
-		glTexCoord2f(1.0f, 1.0f); glVertex3fv(vertice[7]);
-		glTexCoord2f(0.0f, 1.0f); glVertex3fv(vertice[1]);
+		glTexCoord2f(1.0f, 0.0f); glVertex3fv(vertice[0]);
+		glTexCoord2f(1.0f, 1.0f); glVertex3fv(vertice[4]);
+		glTexCoord2f(0.0f, 1.0f); glVertex3fv(vertice[7]);
+		glTexCoord2f(0.0f, 0.0f); glVertex3fv(vertice[1]);
 	glEnd();
 	
 	glBindTexture(GL_TEXTURE_2D, textura1); //textura 1
@@ -101,19 +118,19 @@ void prisma(
 	glBindTexture(GL_TEXTURE_2D, textura2); //textura 2
 	glBegin(GL_POLYGON);	//Back
 		glNormal3f(0.0f, 0.0f, -1.0f);
-		glTexCoord2f(0.0f, 0.0f); glVertex3fv(vertice[6]);
-		glTexCoord2f(1.0f, 0.0f); glVertex3fv(vertice[5]);
-		glTexCoord2f(1.0f, 1.0f); glVertex3fv(vertice[3]);
-		glTexCoord2f(0.0f, 1.0f); glVertex3fv(vertice[2]);
+		glTexCoord2f(1.0f, 1.0f); glVertex3fv(vertice[6]);
+		glTexCoord2f(0.0f, 1.0f); glVertex3fv(vertice[5]);
+		glTexCoord2f(0.0f, 0.0f); glVertex3fv(vertice[3]);
+		glTexCoord2f(1.0f, 0.0f); glVertex3fv(vertice[2]);
 	glEnd();
 
 	glBindTexture(GL_TEXTURE_2D, textura3); //textura 3
 	glBegin(GL_POLYGON);  //Left
 		glNormal3f(-1.0f, 0.0f, 0.0f);
-		glTexCoord2f(0.0f, 0.0f); glVertex3fv(vertice[1]);
-		glTexCoord2f(1.0f, 0.0f); glVertex3fv(vertice[7]);
-		glTexCoord2f(1.0f, 1.0f); glVertex3fv(vertice[6]);
-		glTexCoord2f(0.0f, 1.0f); glVertex3fv(vertice[2]);
+		glTexCoord2f(1.0f, 0.0f); glVertex3fv(vertice[1]);
+		glTexCoord2f(1.0f, 1.0f); glVertex3fv(vertice[7]);
+		glTexCoord2f(0.0f, 1.0f); glVertex3fv(vertice[6]);
+		glTexCoord2f(0.0f, 0.0f); glVertex3fv(vertice[2]);
 	glEnd();
 
 	glBindTexture(GL_TEXTURE_2D, textura4); //textura 4
@@ -246,109 +263,97 @@ void dibujarEscenario() {
 	}glPopMatrix();
 
 	glPushMatrix(); { //frente-izq-bajo-1
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(-3.0, -3.74, 7.0);
 		glScalef(4.0, 2.0, 0.1);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //frente-izq-bajo-2
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(-7.5, -3.74, 7.0);
 		glScalef(1.0, 2.0, 0.1);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //frente-der-bajo
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(4.5, -3.74, 7.0);
 		glScalef(7.0, 2.0, 0.1);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //frente-restante
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(0.0, 0.26, 7.0);
 		glScalef(16.0, 6.0, 0.1);
-		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
+		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_pintura1.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //izquierdo-inferior
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(-8.0, -2.74, 0.0);
 		glScalef(0.1, 4.0, 14.0);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 	
 	glPushMatrix(); { //izquierdo-superior
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(-8.0, 1.26, 0.0);
 		glScalef(0.1, 4.0, 14.0);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //derecho-inferior
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(8.0, -2.74, 0.0);
 		glScalef(0.1, 4.0, 14.0);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //derecho-superior
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(8.0, 1.26, 0.0);
 		glScalef(0.1, 4.0, 14.0);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //trasero-inferior
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(0.0, -2.74, -7.0);
 		glScalef(16.0, 4.0, 0.1);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //trasero-superior
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(0.0, 1.26, -7.0);
 		glScalef(16.0, 4.0, 0.1);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //trasero-inferior-interior
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(0, -2.74, -3.0);
 		glScalef(8.0, 4.0, 0.1);
-		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
+		prisma(t_pintura2.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //izquierdo-inferior-interior
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(-4.0, -2.74, 2.0);
 		glScalef(0.1, 4.0, 10.0);
-		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
+		prisma(t_adoquin.GLindex, t_pintura3.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
-	glPushMatrix(); { //izquierdo-inferior-interior
-		glColor3f(0.25, 0.0, 0.0);
-		glTranslatef(-4.0, -2.74, 2.0);
-		glScalef(0.1, 4.0, 10.0);
-		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
-	}glPopMatrix();
 
 	glPushMatrix(); { //derecho-inferior-interior
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(4.0, -2.74, 2.0);
 		glScalef(0.1, 4.0, 10.0);
-		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
+		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_pintura4.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
-	glPushMatrix(); { //derecho-inferior-interior
-		glColor3f(0.25, 0.0, 0.0);
-		glTranslatef(4.0, -2.74, 2.0);
-		glScalef(0.1, 4.0, 10.0);
-		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
-	}glPopMatrix();
 	//escaleras
 	glPushMatrix(); { //plataforma
 		glColor3f(0.0, 0.0, 0.25);
@@ -549,77 +554,77 @@ void dibujarEscenario() {
 
 	//paredes internas del primer piso
 	glPushMatrix(); { //trasero-izquierdo-interior-superior
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(-2.5, 0.25, -3.0);
 		glScalef(3.0, 2.0, 0.1);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //trasero-derecho-interior-superior
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(2.5, 0.25, -3.0);
 		glScalef(3.0, 2.0, 0.1);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //izquierdo 0-interior-superior
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(-4.0, 0.25, -6.5);
 		glScalef(0.1, 2.0, 1.0);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //derecho 0-interior-superior
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(4.0, 0.25, -6.5);
 		glScalef(0.1, 2.0, 1.0);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //izquierdo 1-interior-superior
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(-4.0, 0.25, -2.0);
 		glScalef(0.1, 2.0, 4.0);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //derecho 1-interior-superior
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(4.0, 0.25, -2.0);
 		glScalef(0.1, 2.0, 4.0);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //izquierdo 2-interior-superior
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(-4.0, 0.25, 4.5);
 		glScalef(0.1, 2.0, 5.0);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //derecho 2-interior-superior
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(4.0, 0.25, 4.5);
 		glScalef(0.1, 2.0, 5.0);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //trasero-restante-interior-superior
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(0.0, 2.25, -3.0);
 		glScalef(8.0, 2.0, 0.1);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //izquierdo-restante-interior-superior
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(-4.0, 2.25, 0.0);
 		glScalef(0.1, 2.0, 14.0);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //derecho-restante-interior-superior
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(4.0, 2.25, 0.0);
 		glScalef(0.1, 2.0, 14.0);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
@@ -635,112 +640,112 @@ void dibujarEscenario() {
 
 	//Torres
 	glPushMatrix(); { //frente-frente-izq
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(-6.0, 5.25, 7.0);
 		glScalef(4.0, 4.0, 0.1);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //frente-frente-izq
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(6.0, 5.25, 7.0);
 		glScalef(4.0, 4.0, 0.1);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //frente-trasero-izq
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(-6.0, 5.25, -3.0);
 		glScalef(4.0, 4.0, 0.1);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //frente-trasero-izq
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(6.0, 5.25, -3.0);
 		glScalef(4.0, 4.0, 0.1);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //trasero-frente-izq
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(-6.0, 5.25, 3.0);
 		glScalef(4.0, 4.0, 0.1);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //trasero-frente-izq
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(6.0, 5.25, 3.0);
 		glScalef(4.0, 4.0, 0.1);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //trasero-trasero-izq
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(-6.0, 5.25, -7.0);
 		glScalef(4.0, 4.0, 0.1);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //trasero-trasero-izq
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(6.0, 5.25, -7.0);
 		glScalef(4.0, 4.0, 0.1);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //frente-izq-izq
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(-8.0, 5.25, 5.0);
 		glScalef(0.1, 4.0, 4.0);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //frente-izq-der
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(8.0, 5.25, 5.0);
 		glScalef(0.1, 4.0, 4.0);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //trasero-izq-izq
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(-8.0, 5.25, -5.0);
 		glScalef(0.1, 4.0, 4.0);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //trasero-izq-der
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(8.0, 5.25, -5.0);
 		glScalef(0.1, 4.0, 4.0);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 	
 	glPushMatrix(); { //frente-der-izq
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(-4.0, 5.25, 5.0);
 		glScalef(0.1, 4.0, 4.0);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //frente-der-der
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(4.0, 5.25, 5.0);
 		glScalef(0.1, 4.0, 4.0);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //trasero-der-izq
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(-4.0, 5.25, -5.0);
 		glScalef(0.1, 4.0, 4.0);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
 
 	glPushMatrix(); { //trasero-der-der
-		glColor3f(0.25, 0.0, 0.0);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(4.0, 5.25, -5.0);
 		glScalef(0.1, 4.0, 4.0);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex);
