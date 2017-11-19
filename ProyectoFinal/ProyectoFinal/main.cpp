@@ -28,6 +28,8 @@ GLfloat g_lookupdown = 0.0f;
 //animaciones
 int sf1 = 0, sf2 = 0, sf3 = 0;
 
+int m1 = 0, m2 = 0;
+
 //angulos
 int angBat = 0.0, angf3 = 0.0,
 angp1, angp2, angp3, angp4, angp5, angp6, angp7;
@@ -35,6 +37,8 @@ angp1, angp2, angp3, angp4, angp5, angp6, angp7;
 //movimiento
 float	movyf1 = -5.0, movxf1 = 0.0, movyf2 = 0.0, movxf2 = 0.0,
 movxf3 = 0.0, movzf3 = 0.0;
+
+float movmx = 0.0, movmz = 0.0;
 
 //materiales
 GLfloat Diffuse[] = { 0.5f, 0.5f, 0.5f, 1.0f };				// Diffuse Light Values
@@ -52,7 +56,7 @@ t_fantasma1, t_fantasma2, t_fantasma3,
 t_pintura1, t_pintura2, t_pintura3, t_pintura4,
 
 //carlos
-t_arbolcopa, t_tronco, t_last, t_hyena, t_earth,t_rip1,t_rip2,t_skeledog,t_flower,t_mantel,
+t_arbolcopa, t_tronco, t_last, t_hyena, t_earth,t_rip1,t_rip2,t_skeledog,t_flower,t_mantel, t_clavos, t_marowak,
 t_verja, t_legion, t_rock, t_welcome, t_uchiha, t_kout, t_koutback, t_shield, t_chain, t_mace, t_rope1, t_lamina, t_headguillo, t_polmil, t_lanzas, t_transparente;
 
 //Figuras
@@ -66,6 +70,10 @@ DWORD dwElapsedTime = 0;
 
 //modelos
 CModel escultura;
+CModel hammer;
+CModel dtree;
+CModel tronco;
+CModel snake;
 
 void init(void)
 {
@@ -266,10 +274,22 @@ void init(void)
 	t_mantel.LoadTGA("texturas/mantel.tga");
 	t_mantel.BuildGLTexture();
 	t_mantel.ReleaseImage();
-	
+
+	t_clavos.LoadTGA("texturas/clavos.tga");
+	t_clavos.BuildGLTexture();
+	t_clavos.ReleaseImage();
+
+	t_marowak.LoadTGA("texturas/marowak.tga");
+	t_marowak.BuildGLTexture();
+	t_marowak.ReleaseImage();
 
 	//modelos
 	escultura._3dsLoad("modelos/greek--culpture.3ds");
+	hammer._3dsLoad("modelos/Hammer N060114.3ds");
+	dtree._3dsLoad("modelos/Autumn-leaves.3ds");
+	tronco._3dsLoad("modelos/Log 2.3DS");
+	snake._3dsLoad("modelos/Snake N010313.3ds");
+
 }
 
 void reshape(int w, int h)
@@ -289,8 +309,7 @@ void reshape(int w, int h)
 void prisma(
 	GLuint textura0, GLuint textura1,
 	GLuint textura2, GLuint textura3,
-	GLuint textura4, GLuint textura5
-)
+	GLuint textura4, GLuint textura5 )
 {
 	GLfloat vertice[8][3] = {
 		{ 0.5 ,-0.5, 0.5 },    //Coordenadas Vértice 0 V0
@@ -362,11 +381,121 @@ void prisma(
 }
 
 void mostrarModelos() {
+	//Esculutra greek
 	glPushMatrix(); {
 		glDisable(GL_COLOR_MATERIAL);
 		glTranslatef(6.0, -3.0, 5.0);
 		glScalef(0.15, 0.15, 0.15);
 		escultura.GLrender(NULL, _SHADED, 1.0);
+	}glPopMatrix();
+
+	//Hammer sala tortura
+	glPushMatrix(); {
+		glDisable(GL_COLOR_MATERIAL);
+		glTranslatef(6.0, -0.4, 5.0);
+		glScalef(0.01,0.01,0.01);
+		hammer.GLrender(NULL, _SHADED, 1.0);
+	}glPopMatrix();
+
+	//Snake
+	glPushMatrix(); {
+		glTranslatef(0.0, 3.0, 5.7);
+		glScalef(0.020, 0.020, 0.020);
+		snake.GLrender(NULL, _SHADED, 1.0);
+	}glPopMatrix();
+
+	//Serie de arboles escenario ambiente
+	glPushMatrix(); {
+		glTranslatef(3.0, -0.1, -60.0);
+		glScalef(0.2, 0.2, 0.2);
+		dtree.GLrender(NULL, _SHADED, 1.0);
+	}glPopMatrix();
+
+	glPushMatrix(); {
+		glTranslatef(-43.0, -0.1, -50.0);
+		glScalef(0.4, 0.4, 0.4);
+		dtree.GLrender(NULL, _SHADED, 5.0);
+	}glPopMatrix();
+
+	glPushMatrix(); {
+		glTranslatef(43.0, -0.1, -50.0);
+		glScalef(0.2,0.2,0.2);
+		dtree.GLrender(NULL, _SHADED, 5.0);
+	}glPopMatrix();
+
+	glPushMatrix(); {
+		glTranslatef(43.0, -0.1, 50.0);
+		glScalef(0.15, 0.15, 0.15);
+		dtree.GLrender(NULL, _SHADED, 5.0);
+	}glPopMatrix();
+
+	glPushMatrix(); {
+		glTranslatef(43.0, -0.1, 5.0);
+		glScalef(0.1, 0.1, 0.1);
+		dtree.GLrender(NULL, _SHADED, 5.0);
+	}glPopMatrix();
+
+	//Serie de Ambiente para Troncos con Hacha.
+	//Tienen posiciones aleatorias 
+
+	glPushMatrix(); {
+		glTranslatef(35.0, -5.0, 10.0);
+		glScalef(0.009, 0.0065, 0.009);
+		tronco.GLrender(NULL, _SHADED, 5.0);
+	}glPopMatrix();
+
+	glPushMatrix(); {
+		glTranslatef(38.0, -5.0, 20.0);
+		glScalef(0.009, 0.0065, 0.009);
+		tronco.GLrender(NULL, _SHADED, 5.0);
+	}glPopMatrix();
+
+	glPushMatrix(); {
+		glTranslatef(27.0, -5.0, 4.0);
+		glScalef(0.009, 0.0065, 0.009);
+		tronco.GLrender(NULL, _SHADED, 5.0);
+	}glPopMatrix();
+
+	glPushMatrix(); {
+		glTranslatef(57.0, -5.0, -10.0);
+		glScalef(0.009, 0.0065, 0.009);
+		tronco.GLrender(NULL, _SHADED, 5.0);
+	}glPopMatrix();
+
+	glPushMatrix(); {
+		glTranslatef(51.0, -5.0, -18.0);
+		glScalef(0.009, 0.0065, 0.009);
+		tronco.GLrender(NULL, _SHADED, 5.0);
+	}glPopMatrix();
+
+	glPushMatrix(); {
+		glTranslatef(12.0, -5.0, 38.0);
+		glScalef(0.009, 0.0065, 0.009);
+		tronco.GLrender(NULL, _SHADED, 5.0);
+	}glPopMatrix();
+
+	glPushMatrix(); {
+		glTranslatef(5.0, -5.0, 28.0);
+		glScalef(0.009, 0.0065, 0.009);
+		tronco.GLrender(NULL, _SHADED, 5.0);
+	}glPopMatrix();
+
+	glPushMatrix(); {
+		glTranslatef(5.0, -5.0, -38.0);
+		glScalef(0.009, 0.0065, 0.009);
+		tronco.GLrender(NULL, _SHADED, 5.0);
+	}glPopMatrix();
+
+	glPushMatrix(); {
+		glTranslatef(-15.0, -5.0, -38.0);
+		glScalef(0.009, 0.0065, 0.009);
+		tronco.GLrender(NULL, _SHADED, 5.0);
+	}glPopMatrix();
+
+	glPushMatrix(); {
+		glTranslatef(-35.0, -5.0, 36.0);
+		glScalef(0.009, 0.0065, 0.009);
+		tronco.GLrender(NULL, _SHADED, 5.0);
 	}glPopMatrix();
 
 }
@@ -458,6 +587,25 @@ void dibujarFantasmas() {
 		}glEnd();
 		glDisable(GL_ALPHA_TEST);
 	}glPopMatrix();
+
+	//Carlos Marowak
+	glPushMatrix(); {
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.1);
+		glBindTexture(GL_TEXTURE_2D, t_marowak.GLindex);
+		glTranslatef(movmx, -1.0, movmz);
+		glRotatef(angf3, 0.0, 1.0, 0.0);
+		glBegin(GL_QUADS); { //plano
+			glColor3f(1.0, 1.0, 1.0);
+			glNormal3f(0.0f, 0.0f, 1.0f);
+			glTexCoord2f(0.0f, 0.0f); glVertex3f(-0.8, -0.8, 0.0);
+			glTexCoord2f(1.0f, 0.0f); glVertex3f(0.8, -0.8, 0.0);
+			glTexCoord2f(1.0f, 1.0f); glVertex3f(0.8, 0.8, 0.0);
+			glTexCoord2f(0.0f, 1.0f); glVertex3f(-0.4, 0.8, 0.0);
+		}glEnd();
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
 
 }
 
@@ -1661,7 +1809,46 @@ void dibujarSalaTortura() {
 		glDisable(GL_ALPHA_TEST);
 	}glPopMatrix();
 
-	//MESA
+	//Cama clavo
+	//Patita derecha atras
+	glPushMatrix(); {
+		glTranslatef(-7.0, -0.1, 3.2);
+		glScalef(0.1, 1.0, 0.3);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Patita izquierda atras 
+	glPushMatrix(); {
+		glTranslatef(-5.0, -0.1, 3.2);
+		glScalef(0.1, 1.0, 0.3);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Patita derecha enfrente
+	glPushMatrix(); {
+		glTranslatef(-7.0, -0.1, 5.2);
+		glScalef(0.1, 1.0, 0.3);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Patita izquierda enfrente
+	glPushMatrix(); {
+		glTranslatef(-5.0, -0.1, 5.2);
+		glScalef(0.1, 1.0, 0.3);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Plano donde va la comida, la "mesa"
+	glPushMatrix(); {
+		glTranslatef(-6.0, 0.5, 4.5);
+		glScalef(2.5, 0.2, 2.8);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_clavos.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//MESA COMIDA
 	//Patita derecha atras
 	glPushMatrix(); {
 		glTranslatef(7.0, -0.1, -5.2);
@@ -1708,6 +1895,7 @@ void dibujarSalaTortura() {
 	}glPopMatrix();
 
 	//AGREGAR COMIDA EN MODELO 3DS :C
+
 
 
 	//GUILLOTINA
