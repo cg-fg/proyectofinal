@@ -14,35 +14,64 @@ CCamera objCamera;
 
 GLfloat g_lookupdown = 0.0f;
 
+//animaciones
+int sf1 = 0, sf2=0, sf3=0;
+
+//angulos
+int angBat = 0.0, angf3=0.0,
+	angp1, angp2, angp3, angp4, angp5, angp6, angp7;
+
+//movimiento
+float	movyf1 = -5.0, movxf1=0.0, movyf2 = 0.0, movxf2 = 0.0,
+		movxf3 = 0.0, movzf3=0.0;
+
 //materiales
-GLfloat SunDiffuse[] = { 0.5f, 0.5f, 0.5f, 1.0f };			// Diffuse Light Values
-GLfloat SunSpecular[] = { 0.5, 0.5, 0.5, 1.0 };				// Specular Light Values
+GLfloat Diffuse[] = { 0.5f, 0.5f, 0.5f, 1.0f };				// Diffuse Light Values
+GLfloat Specular[] = { 1.0, 1.0, 1.0, 1.0 };				// Specular Light Values
+GLfloat Position[] = { 0.0f, 7.0f, -5.0f, 0.0f };			// Light Position
+GLfloat Position2[] = { 0.0f, 0.0f, -5.0f, 1.0f };			// Light Position
 
 GLfloat mat1Diffuse[] = { 1.0,1.0,1.0, 0.25f };			// material 1
 GLfloat mat1Specular[] = { 0.25, 0.25, 0.25, 0.25 };
 
 //Texturas
 CTexture	t_adoquin, t_pasto, t_barda, t_piedra, t_teja,
-			t_puerta, t_pared, t_techo,
+			t_puerta, t_pared, t_techo, t_bat, t_cielo,
+			t_fantasma1, t_fantasma2, t_fantasma3,
 			t_pintura1, t_pintura2, t_pintura3, t_pintura4;
+
+// Variables used to calculate frames per second: (Windows)
+DWORD dwFrames = 0;
+DWORD dwCurrentTime = 0;
+DWORD dwLastUpdateTime = 0;
+DWORD dwElapsedTime = 0;
+
+//modelos
+CModel escultura;
 
 void init(void)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClearDepth(1.0f);					// Activamos el valor de inicio del buffer de profundidad
-	glShadeModel(GL_SMOOTH);
 	glEnable(GL_DEPTH_TEST);				// Hacemos la prueba de profundidad
 	glDepthFunc(GL_LEQUAL);				// Tipo de prueba de profundidad a hacer
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	//glEnable(GL_COLOR_MATERIAL);
-	
+	glShadeModel(GL_SMOOTH);
 	//Para emplear luces
+	glLightfv(GL_LIGHT1, GL_POSITION, Position);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, Diffuse);
 	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT1);
-	glLightfv(GL_LIGHT1, GL_DIFFUSE, SunDiffuse);
-	glLightfv(GL_LIGHT1, GL_SPECULAR, SunSpecular);
+	glEnable(GL_LIGHT0);
+
+	glEnable(GL_AUTO_NORMAL);
+	glEnable(GL_NORMALIZE);
+	glEnable(GL_BLEND);			// Turn Blending On
+
+	//glLightfv(GL_LIGHT1, GL_DIFFUSE, SunDiffuse);
+	//glLightfv(GL_LIGHT1, GL_SPECULAR, SunSpecular);
 		
-	objCamera.Position_Camera(0, 2.5f, 3, 0, 2.5f, 0, 0, 1, 0);
+	objCamera.Position_Camera(0.0, -3.8f, 8.5, 0, 2.5f, 0, 0, 1, 0);
 
 //texturas
 	glEnable(GL_TEXTURE_2D);
@@ -94,6 +123,29 @@ void init(void)
 	t_techo.LoadTGA("texturas/techo.tga");
 	t_techo.BuildGLTexture();
 	t_techo.ReleaseImage();
+
+	t_bat.LoadTGA("texturas/bat.tga");
+	t_bat.BuildGLTexture();
+	t_bat.ReleaseImage();
+
+	t_cielo.LoadTGA("texturas/cielo.tga");
+	t_cielo.BuildGLTexture();
+	t_cielo.ReleaseImage();
+
+	t_fantasma1.LoadTGA("texturas/fantasma1.tga");
+	t_fantasma1.BuildGLTexture();
+	t_fantasma1.ReleaseImage();
+
+	t_fantasma2.LoadTGA("texturas/fantasma2.tga");
+	t_fantasma2.BuildGLTexture();
+	t_fantasma2.ReleaseImage();
+
+	t_fantasma3.LoadTGA("texturas/fantasma3.tga");
+	t_fantasma3.BuildGLTexture();
+	t_fantasma3.ReleaseImage();
+
+	//modelos
+	escultura._3dsLoad("modelos/greek--culpture.3ds");
 }
 
 void reshape(int w, int h)
@@ -183,6 +235,105 @@ void prisma(
 	glTexCoord2f(0.0, 4.0f); glVertex3fv(vertice[6]);
 	glTexCoord2f(0.0f, 0.0f); glVertex3fv(vertice[7]);
 	glEnd();
+}
+
+void mostrarModelos(){
+	glPushMatrix();{
+		glDisable(GL_COLOR_MATERIAL);
+		glTranslatef(6.0,-3.0,5.0);
+		glScalef(0.15,0.15,0.15);
+		escultura.GLrender(NULL,_SHADED,1.0);
+	}glPopMatrix();
+}
+
+void dibujarMurcielagos() {
+	glPushMatrix(); {
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.1);
+		glBindTexture(GL_TEXTURE_2D, t_bat.GLindex);
+		glRotatef(-angBat, 0.0, 1.0, 0.0);
+		glTranslatef(8.0,20.0,0.0);		
+		glBegin(GL_QUADS); { //plano
+			glColor3f(1.0, 1.0, 1.0);
+			glNormal3f(0.0f, 0.0f, 1.0f);
+			glTexCoord2f(1.0f, 1.0f); glVertex3f(-3.0, 0.0, 1.0);
+			glTexCoord2f(0.0f, 1.0f); glVertex3f(3.0, 0.0, 1.0);
+			glTexCoord2f(0.0f, 0.0f); glVertex3f(3.0, 0.0, -1.0);
+			glTexCoord2f(1.0f, 0.0f); glVertex3f(-3.0, 0.0, -1.0);
+		}glEnd();
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	glPushMatrix(); {
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.1);
+		glBindTexture(GL_TEXTURE_2D, t_bat.GLindex);
+		glRotatef(angBat, 0.0, 1.0, 0.0);
+		glTranslatef(8.0, 25.0, 0.0);
+		glBegin(GL_QUADS); { //plano
+			glColor3f(1.0, 1.0, 1.0);
+			glNormal3f(0.0f, 0.0f, 1.0f);
+			glTexCoord2f(0.0f, 0.0f); glVertex3f(-3.0, 0.0, 1.0);
+			glTexCoord2f(1.0f, 0.0f); glVertex3f(3.0, 0.0, 1.0);
+			glTexCoord2f(1.0f, 1.0f); glVertex3f(3.0, 0.0, -1.0);
+			glTexCoord2f(0.0f, 1.0f); glVertex3f(-3.0, 0.0, -1.0);
+		}glEnd();
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+}
+
+void dibujarFantasmas() {
+	glPushMatrix(); {
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.1);
+		glBindTexture(GL_TEXTURE_2D, t_fantasma1.GLindex);
+		glTranslatef(movxf1,movyf1,-8.5);
+		glRotatef(180,0.0,1.0,0.0);
+		glBegin(GL_QUADS); { //plano
+			glColor3f(1.0, 1.0, 1.0);
+			glNormal3f(0.0f, 0.0f, 1.0f);
+			glTexCoord2f(0.0f, 0.0f); glVertex3f(-0.4, -0.8, 0.0);
+			glTexCoord2f(1.0f, 0.0f); glVertex3f(0.4, -0.8, 0.0);
+			glTexCoord2f(1.0f, 1.0f); glVertex3f(0.4, 0.8, 0.0);
+			glTexCoord2f(0.0f, 1.0f); glVertex3f(-0.4, 0.8, 0.0);
+		}glEnd();
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	glPushMatrix(); {
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.1);
+		glBindTexture(GL_TEXTURE_2D, t_fantasma3.GLindex);
+		glTranslatef(movxf2, movyf2, -8.5);
+		glRotatef(180, 0.0, 1.0, 0.0);
+		glBegin(GL_QUADS); { //plano
+			glColor3f(1.0, 1.0, 1.0);
+			glNormal3f(0.0f, 0.0f, 1.0f);
+			glTexCoord2f(0.0f, 0.0f); glVertex3f(-0.4, -0.8, 0.0);
+			glTexCoord2f(1.0f, 0.0f); glVertex3f(0.4, -0.8, 0.0);
+			glTexCoord2f(1.0f, 1.0f); glVertex3f(0.4, 0.8, 0.0);
+			glTexCoord2f(0.0f, 1.0f); glVertex3f(-0.4, 0.8, 0.0);
+		}glEnd();
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	glPushMatrix(); {
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.1);
+		glBindTexture(GL_TEXTURE_2D, t_fantasma2.GLindex);
+		glTranslatef(movxf3,-3.95,movzf3);
+		glRotatef(angf3, 0.0, 1.0, 0.0);
+		glBegin(GL_QUADS); { //plano
+			glColor3f(1.0, 1.0, 1.0);
+			glNormal3f(0.0f, 0.0f, 1.0f);
+			glTexCoord2f(0.0f, 0.0f); glVertex3f(-0.4, -0.8, 0.0);
+			glTexCoord2f(1.0f, 0.0f); glVertex3f(0.4, -0.8, 0.0);
+			glTexCoord2f(1.0f, 1.0f); glVertex3f(0.4, 0.8, 0.0);
+			glTexCoord2f(0.0f, 1.0f); glVertex3f(-0.4, 0.8, 0.0);
+		}glEnd();
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
 }
 
 void dibujarLapidas() {
@@ -278,12 +429,19 @@ void dibujarLapidas() {
 	}glPopMatrix();
 }
 
-void dibujarEscenario() {		
+void dibujarEscenario() {	
+	//Cielo
+	glPushMatrix(); {
+		glColor3f(0.8, 0.8, 0.8);
+		glTranslatef(0.0, 30.0, 0.0);
+		glScalef(150.0, 0.5, 150.0);
+		prisma(t_cielo.GLindex, t_cielo.GLindex, t_cielo.GLindex, t_cielo.GLindex, t_cielo.GLindex, t_cielo.GLindex);
+	}glPopMatrix();
 	//base	
 	glPushMatrix(); {
 		glColor3f(0.8, 0.8, 0.8);
 		glTranslatef(0.0, -5.0, 0.0);
-		glScalef(40.0, 0.5, 40.0);
+		glScalef(150.0, 0.5, 150.0);
 		prisma(t_pasto.GLindex, t_pasto.GLindex, t_pasto.GLindex, t_pasto.GLindex, t_pasto.GLindex, t_pasto.GLindex);
 	}glPopMatrix();
 
@@ -934,6 +1092,9 @@ void display(void)
 			objCamera.mUp.x, objCamera.mUp.y, objCamera.mUp.z);	
 		dibujarEscenario();
 		dibujarLapidas();
+		dibujarFantasmas();
+		dibujarMurcielagos();
+		mostrarModelos();
 	glPopMatrix();
 	glutSwapBuffers ( );
 } 
@@ -947,32 +1108,26 @@ void keyboard(unsigned char key, int x, int y)
 
 		case 'W':
 		case 'w':
-			objCamera.Move_Camera(CAMERASPEED + 0.2);
+			objCamera.Move_Camera(CAMERASPEED + 0.1);
+			printf("X:%f\nY:%f\nZ:%f\n",objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
 			break;
 
 		case 'S':
 		case 's':
-			objCamera.Move_Camera(-(CAMERASPEED + 0.2));
+			objCamera.Move_Camera(-(CAMERASPEED + 0.1));
+			printf("X:%f\nY:%f\nZ:%f\n", objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
 			break;
 
 		case 'A':
 		case 'a':
-			objCamera.Strafe_Camera(-(CAMERASPEED + 0.4));
+			objCamera.Strafe_Camera(-(CAMERASPEED + 0.1));
+			printf("X:%f\nY:%f\nZ:%f\n", objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
 			break;
 
 		case 'D':
 		case 'd':
-			objCamera.Strafe_Camera(CAMERASPEED + 0.4);
-			break;
-
-		case 'Q':
-		case 'q':
-			transY += 0.75;
-			break;
-
-		case 'E':
-		case 'e':
-			transY -= 0.75;
+			objCamera.Strafe_Camera(CAMERASPEED + 0.1);
+			printf("X:%f\nY:%f\nZ:%f\n", objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
 			break;
 	 }
 	  glutPostRedisplay();
@@ -996,14 +1151,92 @@ void arrow_keys(int a_keys, int x, int y)  // Funcion para manejo de teclas espe
 		break;
 	case GLUT_KEY_PAGE_UP:
 		objCamera.UpDown_Camera(CAMERASPEED);
+		printf("X:%f\nY:%f\nZ:%f\n", objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
 		break;
 	case GLUT_KEY_PAGE_DOWN:
 		objCamera.UpDown_Camera(-CAMERASPEED);
+		printf("X:%f\nY:%f\nZ:%f\n", objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
 		break;
 	default:
 		break;
 	}
 	glutPostRedisplay();
+}
+
+void animacion() {
+	dwCurrentTime = GetTickCount(); // Even better to use timeGetTime()
+	dwElapsedTime = dwCurrentTime - dwLastUpdateTime;
+	if (dwElapsedTime >= 30)
+	{
+		angBat=(angBat+2)%360;
+
+		//fantasma1
+		if (sf1 == 0) {
+			movyf1 += 0.1;
+			if (movyf1 >= -2.0)
+				sf1 = 30;
+
+		}
+		else {
+			if (sf1 - 1 == 0) {
+				movyf1 = -10.0;
+				movxf1 = 2.0;
+				if (movxf1 >= 6.0)
+					movxf1 = -6.0;
+			}
+			sf1--;
+		}
+
+		//fantasma2
+		if (sf2 == 0) {
+			movyf2 += 0.1;
+			if (movyf2 >= -2.0)
+				sf2=30;
+			
+		}
+		else {
+			if (sf2 - 1 == 0) {
+				movyf2 = -10.0;
+				movxf2 -= 2.0;
+				if (movxf2 <= -6.0)
+					movxf2 = 6.0;
+			}
+			sf2--;
+		}
+
+		//fantasma 2
+		if (sf3 == 0) {
+			angf3 = 180;
+			movzf3 = -7.25;
+			movxf3+=0.15;
+			if (movxf3 >= 8.25) 
+				sf3++;				
+		}
+		else if (sf3==1) {
+			movzf3+=0.15;
+			angf3 = 90;
+			if (movzf3 >= 7.25)
+				sf3++;
+		}
+		else if (sf3 == 2) {
+			angf3 = 0;
+			movxf3 -= 0.15;
+			if (movxf3 <= -8.25)
+				sf3++;
+		}
+		else if (sf3 == 3) {
+			angf3 = 270;
+			movzf3 -= 0.15;
+			if (movzf3 <= -7.25)
+				sf3=0;
+		}
+		dwLastUpdateTime = dwCurrentTime;
+	}
+	glutPostRedisplay();
+}
+
+void audio() {
+	PlaySound("song1.wav", NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
 }
 
 int main(int argc, char **argv){
@@ -1012,11 +1245,13 @@ int main(int argc, char **argv){
 	 glutInitWindowSize (750, 750);
 	 glutInitWindowPosition (0, 0);
 	 glutCreateWindow ("Proyecto Final");
+	 //audio();
 	 init();
 	 glutDisplayFunc(display); 
 	 glutReshapeFunc(reshape);
 	 glutKeyboardFunc(keyboard);
 	 glutSpecialFunc(arrow_keys);
+	 glutIdleFunc(animacion);
 	 glutMainLoop();
 	 return 0;
 }
