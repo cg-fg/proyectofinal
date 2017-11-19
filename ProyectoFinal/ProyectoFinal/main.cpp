@@ -1,3 +1,14 @@
+
+//////////////////////////////////////////////////////////////////
+//////////// Laboratorio de Computacion Gráfica //////////////////
+
+//////////// Proyecto Final.  Grupo: 01			//////////////////
+
+//////////// Godoy Juárez Carlos Eduardo		//////////////////
+//////////// González Colín Fernando			//////////////////
+
+//////////////////////////////////////////////////////////////////
+
 #include "texture.h"
 #include "figuras.h"
 #include "Camera.h"
@@ -15,15 +26,15 @@ CCamera objCamera;
 GLfloat g_lookupdown = 0.0f;
 
 //animaciones
-int sf1 = 0, sf2=0, sf3=0;
+int sf1 = 0, sf2 = 0, sf3 = 0;
 
 //angulos
-int angBat = 0.0, angf3=0.0,
-	angp1, angp2, angp3, angp4, angp5, angp6, angp7;
+int angBat = 0.0, angf3 = 0.0,
+angp1, angp2, angp3, angp4, angp5, angp6, angp7;
 
 //movimiento
-float	movyf1 = -5.0, movxf1=0.0, movyf2 = 0.0, movxf2 = 0.0,
-		movxf3 = 0.0, movzf3=0.0;
+float	movyf1 = -5.0, movxf1 = 0.0, movyf2 = 0.0, movxf2 = 0.0,
+movxf3 = 0.0, movzf3 = 0.0;
 
 //materiales
 GLfloat Diffuse[] = { 0.5f, 0.5f, 0.5f, 1.0f };				// Diffuse Light Values
@@ -36,9 +47,16 @@ GLfloat mat1Specular[] = { 0.25, 0.25, 0.25, 0.25 };
 
 //Texturas
 CTexture	t_adoquin, t_pasto, t_barda, t_piedra, t_teja,
-			t_puerta, t_pared, t_techo, t_bat, t_cielo,
-			t_fantasma1, t_fantasma2, t_fantasma3,
-			t_pintura1, t_pintura2, t_pintura3, t_pintura4;
+t_puerta, t_pared, t_techo, t_bat, t_cielo,
+t_fantasma1, t_fantasma2, t_fantasma3,
+t_pintura1, t_pintura2, t_pintura3, t_pintura4,
+
+//carlos
+t_arbolcopa, t_tronco, t_last, t_hyena, t_earth,t_rip1,t_rip2,t_skeledog,t_flower,t_mantel,
+t_verja, t_legion, t_rock, t_welcome, t_uchiha, t_kout, t_koutback, t_shield, t_chain, t_mace, t_rope1, t_lamina, t_headguillo, t_polmil, t_lanzas, t_transparente;
+
+//Figuras
+CFiguras objeto1;
 
 // Variables used to calculate frames per second: (Windows)
 DWORD dwFrames = 0;
@@ -68,12 +86,12 @@ void init(void)
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_BLEND);			// Turn Blending On
 
-	//glLightfv(GL_LIGHT1, GL_DIFFUSE, SunDiffuse);
-	//glLightfv(GL_LIGHT1, GL_SPECULAR, SunSpecular);
-		
+								//glLightfv(GL_LIGHT1, GL_DIFFUSE, SunDiffuse);
+								//glLightfv(GL_LIGHT1, GL_SPECULAR, SunSpecular);
+
 	objCamera.Position_Camera(0.0, -3.8f, 8.5, 0, 2.5f, 0, 0, 1, 0);
 
-//texturas
+	//texturas
 	glEnable(GL_TEXTURE_2D);
 
 	t_adoquin.LoadTGA("texturas/adoquin.tga");
@@ -144,22 +162,128 @@ void init(void)
 	t_fantasma3.BuildGLTexture();
 	t_fantasma3.ReleaseImage();
 
+	//carlos
+	t_verja.LoadTGA("texturas/verja.tga");
+	t_verja.BuildGLTexture();
+	t_verja.ReleaseImage();
+
+	t_legion.LoadTGA("texturas/legion.tga");
+	t_legion.BuildGLTexture();
+	t_legion.ReleaseImage();
+
+	t_rock.LoadTGA("texturas/rock.tga");
+	t_rock.BuildGLTexture();
+	t_rock.ReleaseImage();
+
+	t_welcome.LoadTGA("texturas/welcome.tga");
+	t_welcome.BuildGLTexture();
+	t_welcome.ReleaseImage();
+
+	t_uchiha.LoadTGA("texturas/uchiha.tga");
+	t_uchiha.BuildGLTexture();
+	t_uchiha.ReleaseImage();
+
+	t_kout.LoadTGA("texturas/kout.tga");
+	t_kout.BuildGLTexture();
+	t_kout.ReleaseImage();
+
+	t_koutback.LoadTGA("texturas/koutback.tga");
+	t_koutback.BuildGLTexture();
+	t_koutback.ReleaseImage();
+
+	t_arbolcopa.LoadTGA("texturas/arbolcopa.tga");
+	t_arbolcopa.BuildGLTexture();
+	t_arbolcopa.ReleaseImage();
+
+	t_tronco.LoadTGA("texturas/tronco.tga");
+	t_tronco.BuildGLTexture();
+	t_tronco.ReleaseImage();
+
+	t_shield.LoadTGA("texturas/shield.tga");
+	t_shield.BuildGLTexture();
+	t_shield.ReleaseImage();
+
+	t_chain.LoadTGA("texturas/chain.tga");
+	t_chain.BuildGLTexture();
+	t_chain.ReleaseImage();
+
+	t_mace.LoadTGA("texturas/mace.tga");
+	t_mace.BuildGLTexture();
+	t_mace.ReleaseImage();
+
+	t_rope1.LoadTGA("texturas/rope1.tga");
+	t_rope1.BuildGLTexture();
+	t_rope1.ReleaseImage();
+
+	t_lamina.LoadTGA("texturas/lamina.tga");
+	t_lamina.BuildGLTexture();
+	t_lamina.ReleaseImage();
+
+	t_headguillo.LoadTGA("texturas/headguillo.tga");
+	t_headguillo.BuildGLTexture();
+	t_headguillo.ReleaseImage();
+
+	t_transparente.LoadTGA("texturas/transparente.tga");
+	t_transparente.BuildGLTexture();
+	t_transparente.ReleaseImage();
+
+	t_polmil.LoadTGA("texturas/polmil.tga");
+	t_polmil.BuildGLTexture();
+	t_polmil.ReleaseImage();
+
+	t_lanzas.LoadTGA("texturas/lanzas.tga");
+	t_lanzas.BuildGLTexture();
+	t_lanzas.ReleaseImage();
+
+	t_last.LoadTGA("texturas/last.tga");
+	t_last.BuildGLTexture();
+	t_last.ReleaseImage();
+
+	t_hyena.LoadTGA("texturas/hyena.tga");
+	t_hyena.BuildGLTexture();
+	t_hyena.ReleaseImage();
+
+	t_earth.LoadTGA("texturas/earth.tga");
+	t_earth.BuildGLTexture();
+	t_earth.ReleaseImage();
+
+	t_rip1.LoadTGA("texturas/rip1.tga");
+	t_rip1.BuildGLTexture();
+	t_rip1.ReleaseImage();
+
+	t_rip2.LoadTGA("texturas/rip2.tga");
+	t_rip2.BuildGLTexture();
+	t_rip2.ReleaseImage();
+
+	t_skeledog.LoadTGA("texturas/skeledog.tga");
+	t_skeledog.BuildGLTexture();
+	t_skeledog.ReleaseImage();
+
+	t_flower.LoadTGA("texturas/flower.tga");
+	t_flower.BuildGLTexture();
+	t_flower.ReleaseImage();
+
+	t_mantel.LoadTGA("texturas/mantel.tga");
+	t_mantel.BuildGLTexture();
+	t_mantel.ReleaseImage();
+	
+
 	//modelos
 	escultura._3dsLoad("modelos/greek--culpture.3ds");
 }
 
 void reshape(int w, int h)
 {
-	 if (!h)
-		h=1;
+	if (!h)
+		h = 1;
 
-	 glViewport(0, 0,w,h);
-	 glMatrixMode(GL_PROJECTION);
-	 glLoadIdentity();
-	 glFrustum(-0.1, 0.1, -0.1, 0.1, 0.1, 170.0);
-	 glMatrixMode(GL_MODELVIEW);
-	 //glLoadIdentity();
-	 return;
+	glViewport(0, 0, w, h);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glFrustum(-0.1, 0.1, -0.1, 0.1, 0.1, 170.0);
+	glMatrixMode(GL_MODELVIEW);
+	//glLoadIdentity();
+	return;
 }
 
 void prisma(
@@ -237,13 +361,14 @@ void prisma(
 	glEnd();
 }
 
-void mostrarModelos(){
-	glPushMatrix();{
+void mostrarModelos() {
+	glPushMatrix(); {
 		glDisable(GL_COLOR_MATERIAL);
-		glTranslatef(6.0,-3.0,5.0);
-		glScalef(0.15,0.15,0.15);
-		escultura.GLrender(NULL,_SHADED,1.0);
+		glTranslatef(6.0, -3.0, 5.0);
+		glScalef(0.15, 0.15, 0.15);
+		escultura.GLrender(NULL, _SHADED, 1.0);
 	}glPopMatrix();
+
 }
 
 void dibujarMurcielagos() {
@@ -252,7 +377,7 @@ void dibujarMurcielagos() {
 		glAlphaFunc(GL_GREATER, 0.1);
 		glBindTexture(GL_TEXTURE_2D, t_bat.GLindex);
 		glRotatef(-angBat, 0.0, 1.0, 0.0);
-		glTranslatef(8.0,20.0,0.0);		
+		glTranslatef(8.0, 20.0, 0.0);
 		glBegin(GL_QUADS); { //plano
 			glColor3f(1.0, 1.0, 1.0);
 			glNormal3f(0.0f, 0.0f, 1.0f);
@@ -287,8 +412,8 @@ void dibujarFantasmas() {
 		glEnable(GL_ALPHA_TEST);
 		glAlphaFunc(GL_GREATER, 0.1);
 		glBindTexture(GL_TEXTURE_2D, t_fantasma1.GLindex);
-		glTranslatef(movxf1,movyf1,-8.5);
-		glRotatef(180,0.0,1.0,0.0);
+		glTranslatef(movxf1, movyf1, -8.5);
+		glRotatef(180, 0.0, 1.0, 0.0);
 		glBegin(GL_QUADS); { //plano
 			glColor3f(1.0, 1.0, 1.0);
 			glNormal3f(0.0f, 0.0f, 1.0f);
@@ -321,7 +446,7 @@ void dibujarFantasmas() {
 		glEnable(GL_ALPHA_TEST);
 		glAlphaFunc(GL_GREATER, 0.1);
 		glBindTexture(GL_TEXTURE_2D, t_fantasma2.GLindex);
-		glTranslatef(movxf3,-3.95,movzf3);
+		glTranslatef(movxf3, -3.95, movzf3);
 		glRotatef(angf3, 0.0, 1.0, 0.0);
 		glBegin(GL_QUADS); { //plano
 			glColor3f(1.0, 1.0, 1.0);
@@ -402,11 +527,11 @@ void dibujarLapidas() {
 		glScalef(0.5, 0.5, 0.5);
 		prisma(t_barda.GLindex, t_barda.GLindex, t_barda.GLindex, t_barda.GLindex, t_barda.GLindex, t_barda.GLindex);
 	}glPopMatrix();
-		
+
 	//cruz 4
 	glPushMatrix(); {//cruz-vertical 1
 		glColor3f(0.8, 0.0, 0.8);
-		glTranslatef(6.0, -4.0, -8.0);		
+		glTranslatef(6.0, -4.0, -8.0);
 		glRotatef(25.0, 0.0, 0.0, 1.0);
 		glScalef(0.5, 1.5, 0.5);
 		prisma(t_barda.GLindex, t_barda.GLindex, t_barda.GLindex, t_barda.GLindex, t_barda.GLindex, t_barda.GLindex);
@@ -429,7 +554,7 @@ void dibujarLapidas() {
 	}glPopMatrix();
 }
 
-void dibujarEscenario() {	
+void dibujarEscenario() {
 	//Cielo
 	glPushMatrix(); {
 		glColor3f(0.8, 0.8, 0.8);
@@ -437,6 +562,285 @@ void dibujarEscenario() {
 		glScalef(150.0, 0.5, 150.0);
 		prisma(t_cielo.GLindex, t_cielo.GLindex, t_cielo.GLindex, t_cielo.GLindex, t_cielo.GLindex, t_cielo.GLindex);
 	}glPopMatrix();
+
+
+	//carlos
+	//Arbol tronco
+	glPushMatrix(); {
+		glColor3f(0.47, 0.33, 0.28);
+		glTranslatef(13.0, -5.5, 16.0);
+		objeto1.cilindro(1.0, 3.0, 25.0, t_tronco.GLindex);
+	} glPopMatrix();
+
+	//Arbol Parte Arriba
+	glPushMatrix(); {
+		glColor3f(0.0, 1.0, 0.0);
+		glTranslatef(13.0, -2.5, 16.0);
+		objeto1.cono(7.0, 2.5, 25.0, t_arbolcopa.GLindex);
+	} glPopMatrix();
+
+	//Barda Izquierda Enfrente
+	glPushMatrix(); {
+		glTranslatef(-11.0, -3.5, 20.0);
+		glScalef(17.8, 2.0, 0.0);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.1);
+		prisma(t_verja.GLindex, t_verja.GLindex, t_verja.GLindex, t_verja.GLindex, t_verja.GLindex, t_verja.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//Barda Derecha Enfrente
+	glPushMatrix(); {
+		glTranslatef(11.0, -3.5, 20.0);
+		glScalef(17.8, 2.0, 0.0);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.1);
+		prisma(t_verja.GLindex, t_verja.GLindex, t_verja.GLindex, t_verja.GLindex, t_verja.GLindex, t_verja.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//Barda Atras
+	glPushMatrix(); {
+		glTranslatef(0.0, -3.5, -20.0);
+		glScalef(40.8, 2.0, 0.0);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.1);
+		prisma(t_verja.GLindex, t_verja.GLindex, t_verja.GLindex, t_verja.GLindex, t_verja.GLindex, t_verja.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//Barda Costado Derecho
+	glPushMatrix(); {
+		glTranslatef(20.0, -3.5, 0.0);
+		glScalef(0.0, 2.0, 42.0);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.1);
+		prisma(t_verja.GLindex, t_verja.GLindex, t_verja.GLindex, t_verja.GLindex, t_verja.GLindex, t_verja.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//Barda Costado Izquierdo
+	glPushMatrix(); {
+		glTranslatef(-20.0, -3.5, 0.0);
+		glScalef(0.0, 2.0, 42.0);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.1);
+		prisma(t_verja.GLindex, t_verja.GLindex, t_verja.GLindex, t_verja.GLindex, t_verja.GLindex, t_verja.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//Caminito
+	glPushMatrix(); {
+		glTranslatef(0.0, -4.6, 15.0);
+		glScalef(2.0, 0.0, 10.0);
+		prisma(t_rock.GLindex, t_rock.GLindex, t_rock.GLindex, t_rock.GLindex, t_rock.GLindex, t_rock.GLindex);
+	}glPopMatrix();
+
+	//Letrero Keep Out
+	glPushMatrix(); {  // mensaje
+		glTranslatef(-4.3, -1.6, 13.0);
+		glScalef(3.0, 2.0, 0.5);
+		glRotatef(180.0, 0.0, 1.0, 0.0);
+		prisma(t_kout.GLindex, t_koutback.GLindex, t_kout.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Palito que lo sostiene
+	glPushMatrix(); {
+		glTranslatef(-4.3, -3.6, 13.0);
+		glScalef(1.0, 2.0, 0.2);
+		glRotatef(180.0, 0.0, 1.0, 0.0);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Tapete Welcome
+	glPushMatrix(); {
+		glTranslatef(0.0, -4.6, 8.5);
+		glScalef(3.0, 0.0, 3.0);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_welcome.GLindex, t_welcome.GLindex, t_welcome.GLindex, t_welcome.GLindex, t_welcome.GLindex, t_welcome.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//Simbolo Legion
+	glPushMatrix(); {
+		glTranslatef(0.0, 0.26, 7.3);
+		glScalef(3.0, 3.0, 0.05);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_legion.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//Simbolo Uchiha Izquierdo
+	glPushMatrix(); {
+		glTranslatef(-5.9, 5.1, 7.3);
+		glScalef(3.0, 3.0, 0.05);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_uchiha.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//Simbolo Uchiha Derecha
+	glPushMatrix(); {
+		glTranslatef(5.9, 5.1, 7.3);
+		glScalef(3.0, 3.0, 0.05);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_uchiha.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//Cementerios
+
+	//Cementerio izquierda
+	//base	
+	glPushMatrix(); {
+		glTranslatef(-45.0, -4.5, 0.0);
+		glScalef(40.0, 0.1, 40.0);
+		prisma(t_earth.GLindex, t_earth.GLindex, t_earth.GLindex, t_earth.GLindex, t_earth.GLindex, t_earth.GLindex);
+	}glPopMatrix();
+
+	//Lapidas Cementerio izq
+
+	//Lapida 1
+	glPushMatrix(); {
+		glTranslatef(-60.0, -2.5, -14.0);
+		glScalef(3.0, 3.0, 0.05);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_rip1.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//Lapida 2
+	glPushMatrix(); {
+		glTranslatef(-50.0, -2.5, -14.0);
+		glScalef(3.0, 3.0, 0.05);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_rip2.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//Lapida 3
+	glPushMatrix(); {
+		glTranslatef(-40.0, -2.5, -14.0);
+		glScalef(3.0, 3.0, 0.05);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_rip1.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//Lapida 4
+	glPushMatrix(); {
+		glTranslatef(-30.0, -2.5, -14.0);
+		glScalef(3.0, 3.0, 0.05);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_rip2.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//Lapida 5
+	glPushMatrix(); {
+		glTranslatef(-60.0, -2.5, -6.0);
+		glScalef(3.0, 3.0, 0.05);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_rip2.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//Lapida 6
+	glPushMatrix(); {
+		glTranslatef(-50.0, -2.5, -6.0);
+		glScalef(3.0, 3.0, 0.05);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_rip2.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//Lapida 7
+	glPushMatrix(); {
+		glTranslatef(-40.0, -2.5, -6.0);
+		glRotatef(-20.0, 1.0, 0.0, 0.0);
+		glScalef(3.0, 3.0, 0.05);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_rip1.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//Lapida 8
+	glPushMatrix(); {
+		glTranslatef(-30.0, -2.5, -6.0);
+		glRotatef(-20.0, 1.0, 0.0, 0.0);
+		glScalef(3.0, 3.0, 0.05);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_rip2.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//Lapida 9
+	glPushMatrix(); {
+		glTranslatef(-40.0, -2.5, 2.0);
+		glRotatef(-50.0, 1.0, 0.0, 0.0);
+		glScalef(3.0, 3.0, 0.05);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_rip2.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//Lapida 10
+	glPushMatrix(); {
+		glTranslatef(-60.0, -2.5, 8.0);
+		glRotatef(-79.0, 1.0, 0.0, 0.0);
+		glScalef(3.0, 3.0, 0.05);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_rip2.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+
+	//Lapida 11
+	glPushMatrix(); {
+		glTranslatef(-53.0, -2.5, 7.0);
+		glRotatef(-59.0, 1.0, 0.0, 0.0);
+		glScalef(3.0, 3.0, 0.05);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_rip1.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//Skeledog
+	glPushMatrix(); {
+		glTranslatef(-40.0, -2.5, 7.0);
+		glScalef(6.0, 6.0, 0.05);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_skeledog.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//flowers (dinosaurio)(Bekar)
+	glPushMatrix(); {
+		glTranslatef(-30.0, -2.5, 12.0);
+		glScalef(6.0, 6.0, 0.05);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_flower.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+
 	//base	
 	glPushMatrix(); {
 		glColor3f(0.8, 0.8, 0.8);
@@ -487,7 +891,7 @@ void dibujarEscenario() {
 		glScalef(0.1, 4.0, 14.0);
 		prisma(t_pared.GLindex, t_pared.GLindex, t_pared.GLindex, t_piedra.GLindex, t_pared.GLindex, t_pared.GLindex);
 	}glPopMatrix();
-	
+
 	glPushMatrix(); { //izquierdo-superior
 		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(-8.0, 1.26, 0.0);
@@ -724,7 +1128,7 @@ void dibujarEscenario() {
 	//Suelo del pimer piso
 	glPushMatrix(); { //piso-trasero
 		glColor3f(0.0, 0.05, 0.25);
-		glTranslatef(0.0, -0.7 , -5.0);
+		glTranslatef(0.0, -0.7, -5.0);
 		glScalef(16, 0.125, 4.0);
 		prisma(t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_adoquin.GLindex, t_techo.GLindex, t_adoquin.GLindex);
 	}glPopMatrix();
@@ -822,7 +1226,7 @@ void dibujarEscenario() {
 	}glPopMatrix();
 
 	//Techo
-	glPushMatrix(); { 
+	glPushMatrix(); {
 		glColor3f(0.0, 0.10, 0.10);
 		glTranslatef(0.0, 3.24, 0.0);
 		glScalef(16.0, 0.1, 14.0);
@@ -913,7 +1317,7 @@ void dibujarEscenario() {
 		glScalef(0.1, 4.0, 4.0);
 		prisma(t_piedra.GLindex, t_piedra.GLindex, t_piedra.GLindex, t_piedra.GLindex, t_piedra.GLindex, t_piedra.GLindex);
 	}glPopMatrix();
-	
+
 	glPushMatrix(); { //frente-der-izq
 		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(-4.0, 5.25, 5.0);
@@ -1081,58 +1485,386 @@ void dibujarEscenario() {
 
 }
 
+void dibujarSalaTortura() {
+
+	//Silla 
+	//Pata enfrente izq
+	glPushMatrix(); {
+		glTranslatef(-0.4, -0.4, -5.3);
+		glScalef(0.3, 0.7, 0.1);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Pata enfrente der
+	glPushMatrix(); {
+		glTranslatef(0.4, -0.4, -5.3);
+		glScalef(0.3, 0.7, 0.1);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Pata atras izq
+	glPushMatrix(); {
+		glTranslatef(-0.4, -0.4, -5.9);
+		glScalef(0.3, 0.7, 0.1);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Pata atras der
+	glPushMatrix(); {
+		glTranslatef(0.4, -0.4, -5.9);
+		glScalef(0.3, 0.7, 0.1);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Base silla donde te sientas
+	glPushMatrix(); {
+		glTranslatef(0.0, 0.0, -5.6);
+		glScalef(1.2, 0.03, 1.2);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Respaldo
+
+	//Respaldo silla, "columna" izquierda
+	glPushMatrix(); {
+		glTranslatef(-0.5, 0.6, -6.0);
+		glScalef(0.2, 1.2, 0.1);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Respaldo silla, "columna" derecha
+	glPushMatrix(); {
+		glTranslatef(0.5, 0.6, -6.0);
+		glScalef(0.2, 1.2, 0.1);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Respaldo silla, columnitas intermedias 
+	//columnita intermedia 1
+	glPushMatrix(); {
+		glTranslatef(-0.2, 0.4, -6.0);
+		glScalef(0.08, 0.8, 0.1);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//columnita intermedia 2
+	glPushMatrix(); {
+		glTranslatef(0.2, 0.4, -6.0);
+		glScalef(0.08, 0.8, 0.1);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Respaldo, el "respaldo" (rectangulo)
+	glPushMatrix(); {
+		glTranslatef(0.0, 0.8, -6.0);
+		glScalef(0.8, 0.2, 0.1);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Brazos de la silla
+	//Brazo izquierdo
+	glPushMatrix(); {
+		glTranslatef(-0.5, 0.4, -5.5);
+		glScalef(0.2, 0.1, 0.9);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Brazo derecho
+	glPushMatrix(); {
+		glTranslatef(0.5, 0.4, -5.5);
+		glScalef(0.2, 0.1, 0.9);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Sostiene brazo izq
+	glPushMatrix(); {
+		glTranslatef(-0.45, 0.2, -5.2);
+		glScalef(0.2, 0.3, 0.1);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Sostiene brazo derecho
+	glPushMatrix(); {
+		glTranslatef(0.45, 0.2, -5.2);
+		glScalef(0.2, 0.3, 0.1);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Escudo pared
+	glPushMatrix(); {
+		glTranslatef(-1.4, 0.26, -6.3);
+		glRotatef(-43.0, 1.0, 0.0, 0.0);
+		glScalef(1.0, 1.0, 0.05);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_shield.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//Cadenas
+	glPushMatrix(); {
+		glTranslatef(2.3, 1.8, -6.8);
+		glScalef(2.0, 2.0, 0.05);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_chain.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//Mace
+	glPushMatrix(); {
+		glTranslatef(-2.3, 1.8, -6.8);
+		glScalef(1.5, 1.5, 0.05);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_mace.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//Simbolo Policia Militar
+	glPushMatrix(); {
+		glTranslatef(0.0, 2.0, -6.8);
+		glScalef(1.4, 1.4, 0.05);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_polmil.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//Skull con su corona ( se llama lanzas la imagen)
+	glPushMatrix(); {
+		glTranslatef(1.7, 0.4, -6.8);
+		glScalef(0.8, 0.8, 0.05);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_lanzas.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//Ultima cena
+	glPushMatrix(); {
+		glTranslatef(1.0, -2.65, -6.7);
+		glScalef(6.0, 4.0, 0.05);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_last.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//hyena
+	glPushMatrix(); {
+		glTranslatef(6.0, -4.3, -6.2);
+		glScalef(2.0, 1.0, 1.0);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_hyena.GLindex, t_transparente.GLindex, t_hyena.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//MESA
+	//Patita derecha atras
+	glPushMatrix(); {
+		glTranslatef(7.0, -0.1, -5.2);
+		glScalef(0.1, 1.0, 0.3);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Patita izquierda atras 
+	glPushMatrix(); {
+		glTranslatef(5.0, -0.1, -2.2);
+		glScalef(0.1, 1.0, 0.3);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Patita derecha enfrente
+	glPushMatrix(); {
+		glTranslatef(7.0, -0.1, -2.2);
+		glScalef(0.1, 1.0, 0.3);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Patita izquierda enfrente
+	glPushMatrix(); {
+		glTranslatef(5.0, -0.1, -5.2);
+		glScalef(0.1, 1.0, 0.3);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Plano donde va la comida, la "mesa"
+	glPushMatrix(); {
+		glTranslatef(6.0, 0.5, -3.5);
+		glScalef(2.5, 0.2, 4.0);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Mantel
+	glPushMatrix(); {
+		glTranslatef(6.0, 0.65, -3.5);
+		glScalef(2.0, 0.05, 4.2);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_mantel.GLindex, t_transparente.GLindex, t_mantel.GLindex, t_mantel.GLindex, t_mantel.GLindex, t_mantel.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//AGREGAR COMIDA EN MODELO 3DS :C
+
+
+	//GUILLOTINA
+	//Patita izquierda
+	glPushMatrix(); {
+		glTranslatef(-7.0, -0.3, -5.2);
+		glScalef(0.3, 0.2, 1.4);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Patita Derecha
+	glPushMatrix(); {
+		glTranslatef(-5.0, -0.5, -5.2);
+		glScalef(0.3, 0.2, 1.4);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Columna izquierda 
+	glPushMatrix(); {
+		glTranslatef(-7.0, 0.8, -5.2);
+		glScalef(0.3, 3.0, 0.3);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Columna derecha 
+	glPushMatrix(); {
+		glTranslatef(-5.0, 0.8, -5.2);
+		glScalef(0.3, 3.0, 0.3);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Palito sostiene inclinado izquierda atras
+	glPushMatrix(); {
+		glTranslatef(-7.0, 0.0, -5.6);
+		glRotatef(35.0, 1.0, 0.0, 0.0);
+		glScalef(0.1, 1.0, 0.1);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Palito sostiene inclinado derecho atras
+	glPushMatrix(); {
+		glTranslatef(-5.0, 0.0, -5.6);
+		glRotatef(35.0, 1.0, 0.0, 0.0);
+		glScalef(0.1, 1.0, 0.1);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Palito sostiene inclinado izquierda enfrente
+	glPushMatrix(); {
+		glTranslatef(-7.0, 0.0, -4.8);
+		glRotatef(-35.0, 1.0, 0.0, 0.0);
+		glScalef(0.1, 1.0, 0.1);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+
+	//Palito sostiene inclinado derecha
+	glPushMatrix(); {
+		glTranslatef(-5.0, 0.0, -4.8);
+		glRotatef(-35.0, 1.0, 0.0, 0.0);
+		glScalef(0.1, 1.0, 0.1);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Tapa que sostiene cuerda
+	glPushMatrix(); {
+		glTranslatef(-6.0, 2.35, -5.2);
+		glScalef(2.2, 0.1, 1.2);
+		prisma(t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex, t_koutback.GLindex);
+	}glPopMatrix();
+
+	//Plano que tiene la cuerda colgando
+	glPushMatrix(); {
+		glTranslatef(-6.0, 2.05, -5.2);
+		glScalef(0.7, 0.7, 0.0);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_rope1.GLindex, t_rope1.GLindex, t_rope1.GLindex, t_rope1.GLindex, t_rope1.GLindex, t_rope1.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//Plano que tiene la navaja de guillotina
+	glPushMatrix(); {
+		glTranslatef(-6.0, 1.4, -5.2);
+		glScalef(1.1, 1.1, 0.05);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_lamina.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex, t_transparente.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+	//Plano que tiene la Posicion para cabeza
+	glPushMatrix(); {
+		glTranslatef(-6.0, 0.3, -5.2);
+		glScalef(1.7, 0.4, 0.2);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0);
+		prisma(t_headguillo.GLindex, t_headguillo.GLindex, t_headguillo.GLindex, t_headguillo.GLindex, t_transparente.GLindex, t_transparente.GLindex);
+		glDisable(GL_ALPHA_TEST);
+	}glPopMatrix();
+
+
+}
+
 void display(void)
-{ 
+{
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();	
+	glLoadIdentity();
 	glPushMatrix();
-		glRotatef(g_lookupdown, 1.0f, 0, 0);
-		gluLookAt(objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z,
-			objCamera.mView.x, objCamera.mView.y, objCamera.mView.z,
-			objCamera.mUp.x, objCamera.mUp.y, objCamera.mUp.z);	
-		dibujarEscenario();
-		dibujarLapidas();
-		dibujarFantasmas();
-		dibujarMurcielagos();
-		mostrarModelos();
+	glRotatef(g_lookupdown, 1.0f, 0, 0);
+	gluLookAt(objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z,
+		objCamera.mView.x, objCamera.mView.y, objCamera.mView.z,
+		objCamera.mUp.x, objCamera.mUp.y, objCamera.mUp.z);
+	dibujarEscenario();
+	dibujarSalaTortura();
+	dibujarLapidas();
+	dibujarFantasmas();
+	dibujarMurcielagos();
+	mostrarModelos();
 	glPopMatrix();
-	glutSwapBuffers ( );
-} 
+	glutSwapBuffers();
+}
 
 void keyboard(unsigned char key, int x, int y)
 {
-	 switch (key) 
-	 {
-		case 27: exit(0);
-				 break;
+	switch (key)
+	{
+	case 27: exit(0);
+		break;
 
-		case 'W':
-		case 'w':
-			objCamera.Move_Camera(CAMERASPEED + 0.1);
-			printf("X:%f\nY:%f\nZ:%f\n",objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
-			break;
+	case 'W':
+	case 'w':
+		objCamera.Move_Camera(CAMERASPEED + 0.1);
+		printf("X:%f\nY:%f\nZ:%f\n", objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
+		break;
 
-		case 'S':
-		case 's':
-			objCamera.Move_Camera(-(CAMERASPEED + 0.1));
-			printf("X:%f\nY:%f\nZ:%f\n", objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
-			break;
+	case 'S':
+	case 's':
+		objCamera.Move_Camera(-(CAMERASPEED + 0.1));
+		printf("X:%f\nY:%f\nZ:%f\n", objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
+		break;
 
-		case 'A':
-		case 'a':
-			objCamera.Strafe_Camera(-(CAMERASPEED + 0.1));
-			printf("X:%f\nY:%f\nZ:%f\n", objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
-			break;
+	case 'A':
+	case 'a':
+		objCamera.Strafe_Camera(-(CAMERASPEED + 0.1));
+		printf("X:%f\nY:%f\nZ:%f\n", objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
+		break;
 
-		case 'D':
-		case 'd':
-			objCamera.Strafe_Camera(CAMERASPEED + 0.1);
-			printf("X:%f\nY:%f\nZ:%f\n", objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
-			break;
-	 }
-	  glutPostRedisplay();
-	  return;
-}    
+	case 'D':
+	case 'd':
+		objCamera.Strafe_Camera(CAMERASPEED + 0.1);
+		printf("X:%f\nY:%f\nZ:%f\n", objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
+		break;
+	}
+	glutPostRedisplay();
+	return;
+}
 
 void arrow_keys(int a_keys, int x, int y)  // Funcion para manejo de teclas especiales (arrow keys)
 {
@@ -1168,7 +1900,7 @@ void animacion() {
 	dwElapsedTime = dwCurrentTime - dwLastUpdateTime;
 	if (dwElapsedTime >= 30)
 	{
-		angBat=(angBat+2)%360;
+		angBat = (angBat + 2) % 360;
 
 		//fantasma1
 		if (sf1 == 0) {
@@ -1191,8 +1923,8 @@ void animacion() {
 		if (sf2 == 0) {
 			movyf2 += 0.1;
 			if (movyf2 >= -2.0)
-				sf2=30;
-			
+				sf2 = 30;
+
 		}
 		else {
 			if (sf2 - 1 == 0) {
@@ -1208,12 +1940,12 @@ void animacion() {
 		if (sf3 == 0) {
 			angf3 = 180;
 			movzf3 = -7.25;
-			movxf3+=0.15;
-			if (movxf3 >= 8.25) 
-				sf3++;				
+			movxf3 += 0.15;
+			if (movxf3 >= 8.25)
+				sf3++;
 		}
-		else if (sf3==1) {
-			movzf3+=0.15;
+		else if (sf3 == 1) {
+			movzf3 += 0.15;
 			angf3 = 90;
 			if (movzf3 >= 7.25)
 				sf3++;
@@ -1228,7 +1960,7 @@ void animacion() {
 			angf3 = 270;
 			movzf3 -= 0.15;
 			if (movzf3 <= -7.25)
-				sf3=0;
+				sf3 = 0;
 		}
 		dwLastUpdateTime = dwCurrentTime;
 	}
@@ -1239,22 +1971,20 @@ void audio() {
 	PlaySound("song1.wav", NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
 }
 
-int main(int argc, char **argv){
-	 glutInit(&argc, argv);
-	 glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB| GLUT_DEPTH);
-	 glutInitWindowSize (750, 750);
-	 glutInitWindowPosition (0, 0);
-	 glutCreateWindow ("Proyecto Final");
-	 //audio();
-	 init();
-	 glutDisplayFunc(display); 
-	 glutReshapeFunc(reshape);
-	 glutKeyboardFunc(keyboard);
-	 glutSpecialFunc(arrow_keys);
-	 glutIdleFunc(animacion);
-	 glutMainLoop();
-	 return 0;
+int main(int argc, char **argv) {
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+	glutInitWindowSize(750, 750);
+	glutInitWindowPosition(0, 0);
+	glutCreateWindow("Proyecto Final");
+	audio();
+	init();
+	glutDisplayFunc(display);
+	glutReshapeFunc(reshape);
+	glutKeyboardFunc(keyboard);
+	glutSpecialFunc(arrow_keys);
+	glutIdleFunc(animacion);
+	glutMainLoop();
+	return 0;
 }
-
-
 
