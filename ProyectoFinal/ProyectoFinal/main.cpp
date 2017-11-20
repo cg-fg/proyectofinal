@@ -1,12 +1,11 @@
 
 //////////////////////////////////////////////////////////////////
 //////////// Laboratorio de Computacion Gráfica //////////////////
-
 //////////// Proyecto Final.  Grupo: 01			//////////////////
-
 //////////// Godoy Juárez Carlos Eduardo		//////////////////
 //////////// González Colín Fernando			//////////////////
-
+//////////////////////////////////////////////////////////////////
+//////////// n o N para iniciar el recorrido    //////////////////
 //////////////////////////////////////////////////////////////////
 
 #include "texture.h"
@@ -18,6 +17,30 @@
 #   pragma comment( lib, "legacy_stdio_definitions.lib" )
 #endif
 
+//Para la animacion de recorrido
+#define MAX_FRAMES 50
+int i_max_steps = 50;
+int i_curr_steps = 0;
+FILE *frms = fopen("reg.txt", "r");
+
+typedef struct _frame
+{
+	float	pos_x, pos_y, pos_z,
+			view_x, view_y, view_z,
+			up_x, up_y, up_z;
+
+	float	inc_pos_x, inc_pos_y, inc_pos_z,
+			inc_view_x, inc_view_y, inc_view_z,
+			inc_up_x, inc_up_y, inc_up_z;
+}FRAME;
+
+FRAME KeyFrame[MAX_FRAMES];
+int FrameIndex = 0;			//introducir datos
+bool play = false;
+int playIndex = 0;
+int frame = 0, time, timebase = 0;
+
+//Variables
 float	angleX = 0.0, angleY = 0.0, angleZ = 0.0,
 transX = 0.0, transY = 0.0, transZ = 0.0;
 
@@ -75,6 +98,52 @@ CModel dtree;
 CModel tronco;
 CModel snake;
 
+void saveFrame(void)
+{
+	printf("frameindex %d\n", FrameIndex);
+	KeyFrame[FrameIndex].pos_x = objCamera.mPos.x;
+	KeyFrame[FrameIndex].pos_y = objCamera.mPos.y;
+	KeyFrame[FrameIndex].pos_z = objCamera.mPos.z;
+	KeyFrame[FrameIndex].view_x = objCamera.mView.x;
+	KeyFrame[FrameIndex].view_y = objCamera.mView.y;
+	KeyFrame[FrameIndex].view_z = objCamera.mView.z;
+	KeyFrame[FrameIndex].up_x = objCamera.mUp.x;
+	KeyFrame[FrameIndex].up_y = objCamera.mUp.y;
+	KeyFrame[FrameIndex].up_z = objCamera.mUp.z;
+	fprintf(frms, "%f %f %f %f %f %f %f %f %f\n",
+		objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z,
+		objCamera.mView.x, objCamera.mView.y, objCamera.mView.z,
+		objCamera.mUp.x, objCamera.mUp.y, objCamera.mUp.z
+		);
+	FrameIndex++;
+}
+
+void resetElements(void)
+{
+	objCamera.mPos.x = KeyFrame[0].pos_x;
+	objCamera.mPos.y = KeyFrame[0].pos_y;
+	objCamera.mPos.z = KeyFrame[0].pos_z;
+	objCamera.mView.x = KeyFrame[0].view_x;
+	objCamera.mView.y = KeyFrame[0].view_y;
+	objCamera.mView.z = KeyFrame[0].view_z;
+	objCamera.mUp.x = KeyFrame[0].up_x;
+	objCamera.mUp.y = KeyFrame[0].up_y;
+	objCamera.mUp.z = KeyFrame[0].up_z;
+}
+
+void interpolation(void)
+{
+	KeyFrame[playIndex].inc_pos_x = (KeyFrame[playIndex + 1].pos_x - KeyFrame[playIndex].pos_x) / i_max_steps;
+	KeyFrame[playIndex].inc_pos_y = (KeyFrame[playIndex + 1].pos_y - KeyFrame[playIndex].pos_y) / i_max_steps;
+	KeyFrame[playIndex].inc_pos_z = (KeyFrame[playIndex + 1].pos_z - KeyFrame[playIndex].pos_z) / i_max_steps;
+	KeyFrame[playIndex].inc_up_x = (KeyFrame[playIndex + 1].up_x - KeyFrame[playIndex].up_x) / i_max_steps;
+	KeyFrame[playIndex].inc_up_y = (KeyFrame[playIndex + 1].up_y - KeyFrame[playIndex].up_y) / i_max_steps;
+	KeyFrame[playIndex].inc_up_z = (KeyFrame[playIndex + 1].up_z - KeyFrame[playIndex].up_z) / i_max_steps;
+	KeyFrame[playIndex].inc_view_x = (KeyFrame[playIndex + 1].view_x - KeyFrame[playIndex].view_x) / i_max_steps;
+	KeyFrame[playIndex].inc_view_y = (KeyFrame[playIndex + 1].view_y - KeyFrame[playIndex].view_y) / i_max_steps;
+	KeyFrame[playIndex].inc_view_z = (KeyFrame[playIndex + 1].view_z - KeyFrame[playIndex].view_z) / i_max_steps;
+}
+
 void init(void)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -98,6 +167,22 @@ void init(void)
 								//glLightfv(GL_LIGHT1, GL_SPECULAR, SunSpecular);
 
 	objCamera.Position_Camera(0.0, -3.8f, 8.5, 0, 2.5f, 0, 0, 1, 0);
+
+	//Recorrido
+	while (!feof(frms)) {
+		fscanf(frms, "%f %f %f %f %f %f %f %f %f\n",
+			&KeyFrame[FrameIndex].pos_x, 
+			&KeyFrame[FrameIndex].pos_y,
+			&KeyFrame[FrameIndex].pos_z,
+			&KeyFrame[FrameIndex].view_x,
+			&KeyFrame[FrameIndex].view_y,
+			&KeyFrame[FrameIndex].view_z,
+			&KeyFrame[FrameIndex].up_x,
+			&KeyFrame[FrameIndex].up_y,
+			&KeyFrame[FrameIndex].up_z		
+		);
+		FrameIndex++;
+	}
 
 	//texturas
 	glEnable(GL_TEXTURE_2D);
@@ -2029,29 +2114,54 @@ void keyboard(unsigned char key, int x, int y)
 	case 'W':
 	case 'w':
 		objCamera.Move_Camera(CAMERASPEED + 0.1);
-		printf("X:%f\nY:%f\nZ:%f\n", objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
+		//printf("X:%f\nY:%f\nZ:%f\n", objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
 		break;
 
 	case 'S':
 	case 's':
 		objCamera.Move_Camera(-(CAMERASPEED + 0.1));
-		printf("X:%f\nY:%f\nZ:%f\n", objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
+		//printf("X:%f\nY:%f\nZ:%f\n", objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
 		break;
 
 	case 'A':
 	case 'a':
 		objCamera.Strafe_Camera(-(CAMERASPEED + 0.1));
-		printf("X:%f\nY:%f\nZ:%f\n", objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
+		//printf("X:%f\nY:%f\nZ:%f\n", objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
 		break;
 
 	case 'D':
 	case 'd':
 		objCamera.Strafe_Camera(CAMERASPEED + 0.1);
-		printf("X:%f\nY:%f\nZ:%f\n", objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
+		//printf("X:%f\nY:%f\nZ:%f\n", objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
 		break;
+
+	case 'b':		//
+	case 'B':
+		if (FrameIndex<MAX_FRAMES)
+		{
+			saveFrame();
+		}
+		break;
+	case 'n':
+	case 'N':
+		if (play == false && (FrameIndex>1))
+		{
+			resetElements();
+			//First Interpolation				
+			interpolation();
+			play = true;
+			playIndex = 0;
+			i_curr_steps = 0;
+		}
+		else
+		{
+			play = false;
+		}
+		break;
+		default:        // Cualquier otra
+			break;
 	}
 	glutPostRedisplay();
-	return;
 }
 
 void arrow_keys(int a_keys, int x, int y)  // Funcion para manejo de teclas especiales (arrow keys)
@@ -2071,11 +2181,11 @@ void arrow_keys(int a_keys, int x, int y)  // Funcion para manejo de teclas espe
 		break;
 	case GLUT_KEY_PAGE_UP:
 		objCamera.UpDown_Camera(CAMERASPEED);
-		printf("X:%f\nY:%f\nZ:%f\n", objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
+		//printf("X:%f\nY:%f\nZ:%f\n", objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
 		break;
 	case GLUT_KEY_PAGE_DOWN:
 		objCamera.UpDown_Camera(-CAMERASPEED);
-		printf("X:%f\nY:%f\nZ:%f\n", objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
+		//printf("X:%f\nY:%f\nZ:%f\n", objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
 		break;
 	default:
 		break;
@@ -2089,7 +2199,6 @@ void animacion() {
 	if (dwElapsedTime >= 30)
 	{
 		angBat = (angBat + 2) % 360;
-
 		//fantasma1
 		if (sf1 == 0) {
 			movyf1 += 0.1;
@@ -2152,6 +2261,42 @@ void animacion() {
 		}
 		dwLastUpdateTime = dwCurrentTime;
 	}
+
+	if (play)
+	{
+		if (i_curr_steps >= i_max_steps) //end of animation between frames?
+		{
+			playIndex++;
+			if (playIndex>FrameIndex - 2)	//end of total animation?
+			{
+				printf("termina anim\n");
+				playIndex = 0;
+				play = false;
+			}
+			else //Next frame interpolations
+			{
+				i_curr_steps = 0; //Reset counter
+								  //Interpolation
+				interpolation();
+
+			}
+		}
+		else
+		{
+			//Draw animation
+			objCamera.mPos.x += KeyFrame[playIndex].inc_pos_x;
+			objCamera.mPos.y += KeyFrame[playIndex].inc_pos_y;
+			objCamera.mPos.z += KeyFrame[playIndex].inc_pos_z;
+			objCamera.mUp.x += KeyFrame[playIndex].inc_up_x;
+			objCamera.mUp.y += KeyFrame[playIndex].inc_up_y;
+			objCamera.mUp.z += KeyFrame[playIndex].inc_up_z;
+			objCamera.mView.x += KeyFrame[playIndex].inc_view_x;
+			objCamera.mView.y += KeyFrame[playIndex].inc_view_y;
+			objCamera.mView.z += KeyFrame[playIndex].inc_view_z;
+
+			i_curr_steps++;
+		}
+	}
 	glutPostRedisplay();
 }
 
@@ -2173,6 +2318,6 @@ int main(int argc, char **argv) {
 	glutSpecialFunc(arrow_keys);
 	glutIdleFunc(animacion);
 	glutMainLoop();
+	fclose(frms);
 	return 0;
 }
-
